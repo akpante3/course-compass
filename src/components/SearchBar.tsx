@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useCourseContext } from "@/context/CourseContext";
 
 interface SearchBarProps {
   defaultValue?: string;
@@ -13,10 +14,12 @@ interface SearchBarProps {
 const SearchBar = ({ defaultValue = "", placeholder = "Search courses...", size = "default" }: SearchBarProps) => {
   const [query, setQuery] = useState(defaultValue);
   const navigate = useNavigate();
+  const { searchCourses } = useCourseContext();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
+      await searchCourses(query.trim());
       navigate(`/search?query=${encodeURIComponent(query.trim())}`);
     }
   };
